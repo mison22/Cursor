@@ -22,7 +22,7 @@ This repository contains comprehensive guides and configuration files for effect
 
 ### ⚙️ Configuration
 
-- **[cursorrules](./cursorrules)** - Rails development guidelines for AI assistance
+- **[.cursorrules](./.cursorrules)** - Rails development guidelines for AI assistance
   - Architecture and design patterns
   - Code style and quality standards
   - Error handling strategies
@@ -32,7 +32,7 @@ This repository contains comprehensive guides and configuration files for effect
 ## 🚀 Quick Start
 
 1. **Install Cursor**: Download from [cursor.sh](https://cursor.sh)
-2. **Copy cursorrules**: Use the provided `.cursorrules` file in your Rails projects
+2. **Copy .cursorrules**: Use the provided `.cursorrules` file in your Rails projects
 3. **Read the guides**: Start with `CURSOR_GUIDE.md` for general usage, then `ASSESSMENT_GUIDE.md` for assessment-specific strategies
 
 ## 🎯 Key Features
@@ -79,7 +79,7 @@ This repository contains comprehensive guides and configuration files for effect
 
 ## 🔧 Configuration
 
-The `cursorrules` file provides guidelines for:
+The `.cursorrules` file provides guidelines for:
 - Service object patterns
 - Controller design principles
 - Error handling strategies

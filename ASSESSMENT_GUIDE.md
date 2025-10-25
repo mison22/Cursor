@@ -28,7 +28,7 @@ bundle -v
 
 - ✅ Cursor updated to latest version
 - ✅ AI features enabled and working
-- ✅ `.cursorrules` file ready to copy into project root (see [cursorrules](./cursorrules))
+- ✅ `.cursorrules` file ready to copy into project root (see [.cursorrules](./.cursorrules))
 - ✅ Comfortable with Cursor's chat interface
 
 ### 3. Mental Preparation
@@ -61,7 +61,7 @@ cd [project-name]
 
 ```bash
 # Copy the Rails development guidelines from this repository
-cp /path/to/this/repo/cursorrules .cursorrules
+cp /path/to/this/repo/.cursorrules .cursorrules
 
 # Or if you have it in your home directory
 cp ~/.cursorrules .cursorrules
@@ -114,7 +114,7 @@ I'm working on a Rails take-home assessment. Here's the PRD:
 
 [PASTE ENTIRE PRD]
 
-Based on this PRD and my [.cursorrules file](./cursorrules), help me:
+Based on this PRD and my [.cursorrules file](./.cursorrules), help me:
 1. Identify all the core requirements (must-haves)
 2. Suggest the technical architecture (models, controllers, services)
 3. List potential edge cases to handle
@@ -544,7 +544,7 @@ Do a final code review of the entire implementation:
 - Any violations of Rails best practices?
 - Any security concerns?
 - Any performance issues?
-- Anything that doesn't follow the [.cursorrules](./cursorrules) guidelines?
+- Anything that doesn't follow the [.cursorrules](./.cursorrules) guidelines?
 
 Be critical - what would you change if you were reviewing this PR?
 
@@ -610,7 +610,7 @@ I'm about to submit. Do one last check:
 - Does everything in my code match the PRD requirements?
 - Are there any obvious bugs or issues?
 - Is the README clear?
-- Did I follow all the Rails conventions in [.cursorrules](./cursorrules)?
+- Did I follow all the Rails conventions in [.cursorrules](./.cursorrules)?
 
 ```
 
