@@ -1,0 +1,207 @@
+# Rails Development Guidelines for AI-Assisted Coding
+
+## About This File
+This configuration guides AI-assisted development to follow Rails best practices,
+maintain code quality, and ensure thoughtful implementation decisions. It reflects
+3+ years of production Rails experience and preferred development workflow.
+
+---
+
+## Development Philosophy & Approach
+
+### My Experience Level
+- 3+ years production Rails experience (Ruby on Rails, PostgreSQL, AWS)
+- Comfortable with Ruby idioms, ActiveRecord patterns, and Rails conventions
+- Prefer concise, actionable guidance over lengthy explanations
+- Value pragmatic solutions over perfect abstractions
+
+### AI Collaboration Approach
+- I review all AI suggestions critically before accepting
+- I expect clear reasoning and tradeoff analysis for architectural decisions
+- I may request revisions or alternative approaches
+- I use AI to accelerate development while maintaining code quality and judgment
+
+---
+
+## Architecture & Design Patterns
+
+### Service Objects
+- Extract complex business logic to `app/services/` directory
+- Service objects should have a single public method (typically `call`)
+- Return explicit success/failure objects or raise specific exceptions
+- Keep services focused and independently testable
+
+### Model Design
+- Models handle data persistence, relationships, and simple validations
+- Keep business logic out of models when it involves multiple entities
+- Use concerns sparingly - only for truly shared, cohesive behavior
+- Follow Single Responsibility Principle
+
+### Controller Design
+- Controllers coordinate between models, services, and views
+- Keep controller actions thin (5-10 lines maximum)
+- Extract multi-step operations to service objects
+- Use before_actions for common setup and authorization
+
+---
+
+## Code Style & Quality
+
+### General Principles
+- Follow Rails conventions strictly (RESTful routes, naming conventions)
+- Use descriptive variable and method names that reveal intent
+- Prefer explicit over clever code
+- Add comments only when the "why" isn't obvious from the code itself
+
+### Method & Class Guidelines
+- Methods should be under 10 lines when possible
+- Classes should have a single, clear purpose
+- Avoid deep nesting (maximum 2-3 levels)
+- Use guard clauses to reduce nesting
+- Extract complex conditionals into well-named methods
+
+### Code Review Standards
+- Prioritize working code over perfect code
+- Don't over-abstract - wait until you have 3 uses before extracting
+- Write code that's easy to understand and delete
+- Commit frequently with clear, imperative messages ("Add user validation")
+
+---
+
+## Error Handling
+
+### Controller Error Handling
+- Always rescue exceptions in controllers
+- Return appropriate HTTP status codes:
+  - 200/201 for success
+  - 404 for not found
+  - 422 for validation errors
+  - 500 for server errors
+- Provide clear, actionable error messages in responses
+- Handle edge cases explicitly (nil checks, empty collections, invalid data)
+
+### Transaction Safety
+- Use ActiveRecord transactions for multi-step operations
+- Handle rollback scenarios gracefully
+- Consider idempotency for critical operations
+
+---
+
+## Testing Strategy
+
+### Test Coverage
+- Write tests using RSpec (or Minitest based on project setup)
+- Test both happy paths AND edge cases
+- Use factories (FactoryBot) over fixtures for test data
+- Aim for meaningful test coverage, not just high percentages
+
+### Test Organization
+- Test services independently from controllers
+- Mock external dependencies and API calls
+- Keep tests focused and fast
+- Use descriptive test names that explain the scenario
+
+---
+
+## Database & ActiveRecord
+
+### Migration Best Practices
+- Always add appropriate indexes for foreign keys and frequently queried columns
+- Write reversible migrations (include `down` method or use reversible blocks)
+- Use database constraints for data integrity (NOT NULL, UNIQUE, etc.)
+- Test migrations in both directions (up and down)
+
+### ActiveRecord Optimization
+- Avoid N+1 queries - use `includes`, `joins`, or `eager_load` appropriately
+- Use scopes for reusable, chainable queries
+- Prefer `find_by` over `where().first`
+- Use `find_each` or `in_batches` for large datasets
+- Consider `select()` to limit columns when loading large datasets
+- Use `pluck()` for retrieving single column values
+
+### Data Validation
+- Validate data at both model and database levels
+- Use strong parameters in controllers for all mass assignment
+- Validate presence of foreign keys, not just associations
+
+---
+
+## Performance Considerations
+
+### Query Optimization
+- Use counter caches for frequently accessed counts
+- Add database indexes strategically
+- Profile queries with `EXPLAIN` for bottlenecks
+
+### Caching Strategy
+- Cache expensive computations when appropriate
+- Use fragment caching for rendered content
+- Consider Russian Doll caching for nested resources
+
+### Background Processing
+- Use background jobs (Sidekiq, etc.) for slow operations
+- Don't block HTTP requests with long-running tasks
+
+---
+
+## Security Best Practices
+
+### Input & Output Security
+- Always use strong parameters for mass assignment
+- Sanitize user input in views
+- Use parameterized queries (Rails default)
+- Validate and sanitize file uploads
+
+### Rails Security Features
+- Use Rails' built-in CSRF protection
+- Enable secure headers (via secure_headers gem if needed)
+- Follow principle of least privilege for database users
+
+---
+
+## Development Workflow
+
+### Time-Saving Preferences
+- Generate boilerplate quickly but always review it
+- Use standard Rails generators (rails g model, rails g controller, etc.)
+- Prefer Rails conventions over custom solutions
+- Focus on core requirements first, enhancements second
+
+### Documentation
+- Update README with setup and running instructions
+- Document non-obvious architectural decisions
+- Keep documentation concise and up-to-date
+
+---
+
+## Common Rails Gotchas to Avoid
+
+### ActiveRecord Pitfalls
+- Don't use `update_attribute` (skips validations) - use `update` instead
+- Don't forget to handle failed saves: use `if @model.save` not just `@model.save`
+- Don't use `delete` when you mean `destroy` (callbacks won't run)
+- Don't forget `inverse_of` for bidirectional associations
+- Always validate presence of foreign keys, not just the association
+
+### General Pitfalls
+- Don't leave debugging code (binding.pry, debugger, console.log)
+- Don't commit commented-out code blocks
+- Don't skip error handling in controllers
+- Don't forget to add indexes on foreign keys
+
+---
+
+## Pre-Submission Checklist
+
+Before finalizing any implementation:
+
+- [ ] All tests pass (`rails test` or `rspec`)
+- [ ] Manual testing completed (rails console or browser)
+- [ ] No debugging statements left in code
+- [ ] README updated with setup steps and dependencies
+- [ ] All migrations are reversible
+- [ ] Error handling implemented for edge cases
+- [ ] Commit messages are clear and follow conventions
+- [ ] No commented-out code blocks
+- [ ] Environment variables documented if added
+- [ ] Code follows Rails conventions and project standards
