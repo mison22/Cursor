@@ -20,6 +20,14 @@ This repository contains comprehensive guides and configuration files for effect
   - Emergency scenarios and troubleshooting
   - Post-submission reflection
 
+- **[FULLSTACK_ASSESSMENT_GUIDE.md](./FULLSTACK_ASSESSMENT_GUIDE.md)** - Full-stack take-home assessment strategy (React/TypeScript + Rails)
+  - Pre-assessment setup for both frontend and backend
+  - Time-boxed implementation phases for full-stack development
+  - Frontend-backend integration strategies
+  - Cursor interaction patterns for both codebases
+  - Testing approaches for React components and Rails APIs
+  - Deployment considerations and best practices
+
 ### 💼 Practice Resources
 
 - **[PRD_Clean.md](./PRD_Clean.md)** - Clean product requirements document template
@@ -27,7 +35,7 @@ This repository contains comprehensive guides and configuration files for effect
   - Includes setup instructions and requirements
   - Perfect for practicing with the Assessment Guide
   - Can be used as a template for creating your own practice projects
-
+ˆ
 - **[setup_omada_practice.sh](./setup_omada_practice.sh)** - Automated Rails project setup script
   - Creates a complete Rails API project for practice
   - Includes Member model, validations, seeds, and API endpoints
@@ -58,7 +66,10 @@ This repository contains comprehensive guides and configuration files for effect
 2. **Choose your configuration**:
    - For Rails-only projects: Copy `.cursorrules` to your project root
    - For full-stack projects: Copy `cursorrules_fullstack_complete` as `.cursorrules` to your project root
-3. **Read the guides**: Start with `CURSOR_GUIDE.md` for general usage, then `ASSESSMENT_GUIDE.md` for assessment-specific strategies
+3. **Read the guides**: 
+   - Start with `CURSOR_GUIDE.md` for general usage
+   - For Rails-only assessments: Use `ASSESSMENT_GUIDE.md`
+   - For full-stack assessments (React/TypeScript + Rails): Use `FULLSTACK_ASSESSMENT_GUIDE.md`
 
 ## 🎯 Key Features
 
@@ -76,6 +87,13 @@ This repository contains comprehensive guides and configuration files for effect
 - Common pitfalls and solutions
 - Emergency troubleshooting
 
+### For Full-Stack Assessments
+- React/TypeScript + Rails API coordination
+- Frontend-backend integration strategies
+- Managing two codebases with Cursor
+- Testing both frontend and backend
+- Deployment preparation and considerations
+
 ## 📋 Usage Examples
 
 ### Basic Cursor Chat
@@ -91,6 +109,8 @@ This repository contains comprehensive guides and configuration files for effect
 ```
 
 ### Assessment Workflow
+
+**Rails-Only Assessment:**
 ```bash
 # Phase 1: Planning
 "Help me plan the implementation for this Rails assessment PRD: [paste requirements]"
@@ -100,6 +120,21 @@ This repository contains comprehensive guides and configuration files for effect
 
 # Phase 3: Testing
 "Create RSpec tests for the UserController covering happy paths and edge cases"
+```
+
+**Full-Stack Assessment:**
+```bash
+# Phase 1: Planning
+"Help me plan the full-stack implementation: React frontend + Rails API backend"
+
+# Phase 2: Backend Implementation
+"Generate the Rails API endpoints with proper serializers"
+
+# Phase 3: Frontend Implementation
+"Create React components with TypeScript types matching the API"
+
+# Phase 4: Integration & Testing
+"Test the full flow from React component to Rails API"
 ```
 
 ### Practice Assessment Workflow
