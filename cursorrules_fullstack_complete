@@ -1,0 +1,808 @@
+# Full-Stack Development Guidelines (React/TypeScript + Rails API)
+
+## About This File
+This configuration guides AI-assisted development for full-stack applications using React/TypeScript on the frontend and Ruby on Rails API on the backend. It reflects production-ready patterns and 3+ years of full-stack experience.
+
+---
+
+## Development Philosophy & Approach
+
+### My Experience Level
+- 3+ years full-stack experience (React, TypeScript, Ruby on Rails, PostgreSQL, AWS)
+- Comfortable with modern React patterns (Hooks, Context, custom hooks)
+- Proficient in TypeScript type systems and generics  
+- Experienced with Rails API development and REST conventions
+- Comfortable with Ruby idioms, ActiveRecord patterns, and Rails conventions
+- Value pragmatic solutions over perfect abstractions
+
+### AI Collaboration Approach
+- I review all AI suggestions critically before accepting
+- I expect clear reasoning and tradeoff analysis for architectural decisions
+- I may request revisions or alternative approaches
+- I use AI to accelerate development while maintaining code quality and judgment
+- When working across frontend/backend, explain how they integrate
+
+---
+
+## Project Structure Expectations
+
+### Monorepo Structure
+```
+project/
+├── frontend/          # React/TypeScript application
+│   ├── src/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── services/
+│   │   ├── types/
+│   │   └── utils/
+│   └── package.json
+└── backend/           # Rails API application
+    ├── app/
+    │   ├── models/
+    │   ├── controllers/
+    │   ├── services/
+    │   └── serializers/
+    └── Gemfile
+```
+
+---
+
+## Frontend Guidelines (React/TypeScript)
+
+### React Best Practices
+
+#### Component Design
+- Use functional components with hooks (no class components)
+- Keep components small and focused (< 200 lines)
+- Extract complex logic to custom hooks
+- Use composition over prop drilling (Context API when needed)
+- Prefer named exports for components
+
+#### Component Structure
+```typescript
+// 1. Imports (external, internal, types, styles)
+// 2. Types/Interfaces
+// 3. Component definition
+// 4. Styled components (if using styled-components)
+// 5. Export
+```
+
+#### Naming Conventions
+- Components: PascalCase (e.g., `UserProfile.tsx`)
+- Hooks: camelCase with "use" prefix (e.g., `useAuth.ts`)
+- Utilities: camelCase (e.g., `formatDate.ts`)
+- Types: PascalCase (e.g., `User`, `ApiResponse`)
+- Constants: UPPER_SNAKE_CASE (e.g., `API_BASE_URL`)
+
+### TypeScript Standards
+
+#### Type Safety
+- Never use `any` - use `unknown` if type is truly unknown
+- Prefer interfaces over types for object shapes
+- Use discriminated unions for complex state
+- Always type function parameters and return values
+- Use generics for reusable components/functions
+
+#### Type Organization
+```typescript
+// Define types close to where they're used
+// For shared types, use types/ directory
+// API types should mirror backend responses
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface ApiResponse<T> {
+  data: T;
+  error?: string;
+}
+```
+
+#### Common Patterns
+```typescript
+// Use const assertions for literal types
+const STATUS = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error',
+} as const;
+
+type Status = typeof STATUS[keyof typeof STATUS];
+
+// Use discriminated unions for state
+type RequestState<T> =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success'; data: T }
+  | { status: 'error'; error: string };
+```
+
+### React Hooks Guidelines
+
+#### Custom Hooks
+- Extract complex logic into custom hooks
+- Name with "use" prefix
+- Return objects for multiple values, tuples for 2 values
+- Handle cleanup in useEffect when needed
+
+```typescript
+// Good: Encapsulates fetching logic
+function useUserData(userId: number) {
+  const [data, setData] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Fetch logic with cleanup
+  }, [userId]);
+
+  return { data, loading, error };
+}
+```
+
+#### useEffect Best Practices
+- Always include dependency array
+- Clean up side effects (subscriptions, timers, etc.)
+- Keep effects focused (one concern per effect)
+- Extract complex logic to functions outside the effect
+
+### State Management
+
+#### Local State
+- Use useState for component-specific state
+- Use useReducer for complex state logic
+- Lift state only when needed (don't prematurely lift)
+
+#### Global State
+- Use Context API for theme, auth, user preferences
+- Consider Zustand or Jotai for complex global state (lighter than Redux)
+- Keep global state minimal - prefer fetching over caching
+
+#### Server State
+- Use React Query (TanStack Query) or SWR for API data
+- Let the library handle caching, revalidation, and loading states
+- Don't store server data in local state unnecessarily
+
+### API Integration
+
+#### Service Layer Pattern
+```typescript
+// services/api/users.ts
+import { apiClient } from './client';
+
+export const userService = {
+  getAll: () => apiClient.get<User[]>('/users'),
+  getById: (id: number) => apiClient.get<User>(`/users/${id}`),
+  create: (data: CreateUserDto) => apiClient.post<User>('/users', data),
+  update: (id: number, data: UpdateUserDto) => 
+    apiClient.put<User>(`/users/${id}`, data),
+  delete: (id: number) => apiClient.delete(`/users/${id}`),
+};
+```
+
+#### API Client Setup
+```typescript
+// services/api/client.ts
+import axios from 'axios';
+
+export const apiClient = axios.create({
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add interceptors for auth tokens, error handling
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('authToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+```
+
+#### Error Handling
+- Create custom error types
+- Handle errors at the service layer
+- Provide user-friendly error messages
+- Log errors for debugging
+
+### Styling Approach
+
+#### CSS Modules (Preferred for Simplicity)
+- One CSS module per component
+- Use camelCase for class names
+- Keep styles scoped to components
+
+#### Tailwind CSS (If Using)
+- Use only core utility classes
+- Extract repeated patterns to components
+- Use className with clsx or cn helper for conditional classes
+
+#### Styled Components (If Using)
+- Define styled components at bottom of file
+- Use TypeScript for prop types
+- Keep styled components simple
+
+### Performance Optimization
+
+#### React Performance
+- Use React.memo for expensive components
+- Use useMemo for expensive calculations
+- Use useCallback for functions passed to children
+- Lazy load routes with React.lazy
+- Virtual scroll for long lists (react-window)
+
+#### Bundle Size
+- Tree-shake unused code
+- Lazy load heavy dependencies
+- Analyze bundle with webpack-bundle-analyzer
+- Use dynamic imports for code splitting
+
+---
+
+## Backend Guidelines (Ruby on Rails API)
+
+### Architecture & Design Patterns
+
+#### Service Objects
+- Extract complex business logic to `app/services/` directory
+- Service objects should have a single public method (typically `call`)
+- Return explicit success/failure objects or raise specific exceptions
+- Keep services focused and independently testable
+
+```ruby
+class Users::CreateService
+  def self.call(params)
+    new(params).call
+  end
+
+  def initialize(params)
+    @params = params
+  end
+
+  def call
+    user = User.new(@params)
+    
+    if user.save
+      UserMailer.welcome_email(user).deliver_later
+      { success: true, user: user }
+    else
+      { success: false, errors: user.errors }
+    end
+  end
+end
+```
+
+#### Model Design
+- Models handle data persistence, relationships, and simple validations
+- Keep business logic out of models when it involves multiple entities
+- Use concerns sparingly - only for truly shared, cohesive behavior
+- Follow Single Responsibility Principle
+
+#### Controller Design
+- Controllers coordinate between models, services, and views
+- Keep controller actions thin (5-10 lines maximum)
+- Extract multi-step operations to service objects
+- Use before_actions for common setup and authorization
+
+```ruby
+class Api::UsersController < ApplicationController
+  before_action :set_user, only: [:show, :update, :destroy]
+
+  def index
+    users = User.all
+    render json: users
+  end
+
+  def show
+    render json: @user
+  end
+
+  private
+
+  def set_user
+    @user = User.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: 'User not found' }, status: :not_found
+  end
+end
+```
+
+### Code Style & Quality
+
+#### General Principles
+- Follow Rails conventions strictly (RESTful routes, naming conventions)
+- Use descriptive variable and method names that reveal intent
+- Prefer explicit over clever code
+- Add comments only when the "why" isn't obvious from the code itself
+
+#### Method & Class Guidelines
+- Methods should be under 10 lines when possible
+- Classes should have a single, clear purpose
+- Avoid deep nesting (maximum 2-3 levels)
+- Use guard clauses to reduce nesting
+- Extract complex conditionals into well-named methods
+
+#### Code Review Standards
+- Prioritize working code over perfect code
+- Don't over-abstract - wait until you have 3 uses before extracting
+- Write code that's easy to understand and delete
+- Commit frequently with clear, imperative messages (e.g., "Add user validation")
+
+### Error Handling
+
+#### Controller Error Handling
+- Always rescue exceptions in controllers
+- Return appropriate HTTP status codes:
+  - 200/201 for success
+  - 404 for not found
+  - 422 for validation errors
+  - 500 for server errors
+- Provide clear, actionable error messages in responses
+- Handle edge cases explicitly (nil checks, empty collections, invalid data)
+
+```ruby
+class ApplicationController < ActionController::API
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
+
+  private
+
+  def not_found(exception)
+    render json: { error: exception.message }, status: :not_found
+  end
+
+  def unprocessable_entity(exception)
+    render json: { error: exception.message }, status: :unprocessable_entity
+  end
+end
+```
+
+#### Transaction Safety
+- Use ActiveRecord transactions for multi-step operations
+- Handle rollback scenarios gracefully
+- Consider idempotency for critical operations
+
+### Serializers
+- Use active_model_serializers or jbuilder
+- Keep serializers focused on presentation
+- Don't include sensitive data
+- Support different response formats (basic vs detailed)
+
+```ruby
+class UserSerializer < ActiveModel::Serializer
+  attributes :id, :name, :email, :created_at
+
+  def email
+    # Only show email if user is viewing their own profile
+    object.email if scope == object
+  end
+end
+```
+
+### Database & ActiveRecord
+
+#### Migration Best Practices
+- Always add appropriate indexes for foreign keys and frequently queried columns
+- Write reversible migrations (include `down` method or use reversible blocks)
+- Use database constraints for data integrity (NOT NULL, UNIQUE, etc.)
+- Test migrations in both directions (up and down)
+
+#### ActiveRecord Optimization
+- Avoid N+1 queries - use `includes`, `joins`, or `eager_load` appropriately
+- Use scopes for reusable, chainable queries
+- Prefer `find_by` over `where().first`
+- Use `find_each` or `in_batches` for large datasets
+- Consider `select()` to limit columns when loading large datasets
+- Use `pluck()` for retrieving single column values
+
+#### Data Validation
+- Validate data at both model and database levels
+- Use strong parameters in controllers for all mass assignment
+- Validate presence of foreign keys, not just associations
+
+### Performance Considerations
+
+#### Query Optimization
+- Use counter caches for frequently accessed counts
+- Add database indexes strategically
+- Profile queries with `EXPLAIN` for bottlenecks
+
+#### Caching Strategy
+- Cache expensive computations when appropriate
+- Use fragment caching for rendered content
+- Consider Russian Doll caching for nested resources
+
+#### Background Processing
+- Use background jobs (Sidekiq, etc.) for slow operations
+- Don't block HTTP requests with long-running tasks
+
+### Security Best Practices
+
+#### Input & Output Security
+- Always use strong parameters for mass assignment
+- Sanitize user input in views
+- Use parameterized queries (Rails default)
+- Validate and sanitize file uploads
+
+#### Rails Security Features
+- Use Rails' built-in CSRF protection
+- Enable secure headers (via secure_headers gem if needed)
+- Follow principle of least privilege for database users
+
+### Common Rails Gotchas to Avoid
+
+#### ActiveRecord Pitfalls
+- Don't use `update_attribute` (skips validations) - use `update` instead
+- Don't forget to handle failed saves: use `if @model.save` not just `@model.save`
+- Don't use `delete` when you mean `destroy` (callbacks won't run)
+- Don't forget `inverse_of` for bidirectional associations
+- Always validate presence of foreign keys, not just the association
+
+#### General Pitfalls
+- Don't leave debugging code (binding.pry, debugger, console.log)
+- Don't commit commented-out code blocks
+- Don't skip error handling in controllers
+- Don't forget to add indexes on foreign keys
+
+---
+
+## Frontend-Backend Integration
+
+### API Contracts
+
+#### Consistent Response Format
+```typescript
+// Frontend expects this format
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+  errors?: Record<string, string[]>;
+}
+```
+
+```ruby
+# Backend returns this format
+def render_success(data, status: :ok)
+  render json: { data: data }, status: status
+end
+
+def render_error(message, status: :unprocessable_entity)
+  render json: { error: message }, status: status
+end
+```
+
+#### Type Safety Across Stack
+- Generate TypeScript types from Rails serializers
+- Document API endpoints (OpenAPI/Swagger)
+- Use JSON Schema for validation
+- Keep frontend types in sync with backend responses
+
+### CORS Configuration
+
+```ruby
+# config/initializers/cors.rb
+Rails.application.config.middleware.insert_before 0, Rack::Cors do
+  allow do
+    origins ENV.fetch('FRONTEND_URL', 'http://localhost:5173')
+    resource '*',
+      headers: :any,
+      methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      credentials: true
+  end
+end
+```
+
+### Authentication Pattern
+
+#### Backend (Rails + JWT)
+```ruby
+class AuthenticationController < ApplicationController
+  def login
+    user = User.find_by(email: params[:email])
+    
+    if user&.authenticate(params[:password])
+      token = JWT.encode({ user_id: user.id }, Rails.application.secret_key_base)
+      render json: { token: token, user: UserSerializer.new(user) }
+    else
+      render json: { error: 'Invalid credentials' }, status: :unauthorized
+    end
+  end
+end
+```
+
+#### Frontend (React)
+```typescript
+// hooks/useAuth.ts
+export function useAuth() {
+  const [user, setUser] = useState<User | null>(null);
+
+  const login = async (email: string, password: string) => {
+    const response = await authService.login({ email, password });
+    localStorage.setItem('authToken', response.token);
+    setUser(response.user);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    setUser(null);
+  };
+
+  return { user, login, logout };
+}
+```
+
+---
+
+## Testing Strategy
+
+### Frontend Testing (React Testing Library)
+
+#### Component Tests
+```typescript
+import { render, screen, fireEvent } from '@testing-library/react';
+import { UserProfile } from './UserProfile';
+
+describe('UserProfile', () => {
+  it('displays user information', () => {
+    render(<UserProfile user={mockUser} />);
+    expect(screen.getByText(mockUser.name)).toBeInTheDocument();
+  });
+
+  it('handles edit button click', () => {
+    const onEdit = jest.fn();
+    render(<UserProfile user={mockUser} onEdit={onEdit} />);
+    
+    fireEvent.click(screen.getByRole('button', { name: /edit/i }));
+    expect(onEdit).toHaveBeenCalledWith(mockUser.id);
+  });
+});
+```
+
+#### Hook Tests
+```typescript
+import { renderHook, act } from '@testing-library/react';
+import { useCounter } from './useCounter';
+
+describe('useCounter', () => {
+  it('increments counter', () => {
+    const { result } = renderHook(() => useCounter());
+    
+    act(() => {
+      result.current.increment();
+    });
+    
+    expect(result.current.count).toBe(1);
+  });
+});
+```
+
+### Backend Testing (RSpec)
+
+#### Test Coverage
+- Write tests using RSpec (or Minitest based on project setup)
+- Test both happy paths AND edge cases
+- Use factories (FactoryBot) over fixtures for test data
+- Aim for meaningful test coverage, not just high percentages
+
+#### Test Organization
+- Test services independently from controllers
+- Mock external dependencies and API calls
+- Keep tests focused and fast
+- Use descriptive test names that explain the scenario
+
+#### Model Tests
+```ruby
+RSpec.describe User, type: :model do
+  it { should validate_presence_of(:email) }
+  it { should validate_uniqueness_of(:email) }
+  
+  describe '#full_name' do
+    it 'returns first and last name' do
+      user = User.new(first_name: 'John', last_name: 'Doe')
+      expect(user.full_name).to eq('John Doe')
+    end
+  end
+end
+```
+
+#### Request Tests
+```ruby
+RSpec.describe 'Users API', type: :request do
+  describe 'GET /api/users' do
+    it 'returns all users' do
+      create_list(:user, 3)
+      
+      get '/api/users'
+      
+      expect(response).to have_http_status(:ok)
+      expect(JSON.parse(response.body).size).to eq(3)
+    end
+  end
+end
+```
+
+---
+
+## Development Workflow
+
+### Time-Saving Preferences
+- Generate boilerplate quickly but review thoroughly
+- Use standard patterns (Rails generators, React conventions)
+- Prefer convention over configuration
+- Focus on core requirements first, polish later
+
+### Documentation
+- Update README with setup and running instructions
+- Document non-obvious architectural decisions
+- Keep documentation concise and up-to-date
+
+---
+
+## Common Patterns & Recipes
+
+### Form Handling (React)
+
+```typescript
+interface FormData {
+  name: string;
+  email: string;
+}
+
+function UserForm() {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+  });
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await userService.create(formData);
+      // Handle success
+    } catch (error) {
+      // Handle error
+      setErrors(error.response.data.errors);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="name" value={formData.name} onChange={handleChange} />
+      {errors.name && <span>{errors.name}</span>}
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+### Pagination Pattern
+
+#### Backend
+```ruby
+class Api::UsersController < ApplicationController
+  def index
+    page = params[:page] || 1
+    per_page = params[:per_page] || 20
+    
+    users = User.page(page).per(per_page)
+    
+    render json: {
+      data: users,
+      meta: {
+        current_page: users.current_page,
+        total_pages: users.total_pages,
+        total_count: users.total_count
+      }
+    }
+  end
+end
+```
+
+#### Frontend
+```typescript
+interface PaginatedResponse<T> {
+  data: T[];
+  meta: {
+    current_page: number;
+    total_pages: number;
+    total_count: number;
+  };
+}
+
+function useUsers(page: number) {
+  return useQuery(['users', page], () => 
+    userService.getAll({ page })
+  );
+}
+```
+
+---
+
+## Environment Configuration
+
+### Frontend (.env)
+```bash
+REACT_APP_API_URL=http://localhost:3000/api
+REACT_APP_ENV=development
+```
+
+### Backend (.env)
+```bash
+DATABASE_URL=postgresql://localhost/myapp_development
+FRONTEND_URL=http://localhost:5173
+SECRET_KEY_BASE=your_secret_key
+```
+
+---
+
+## Pre-Submission Checklist
+
+### Frontend
+- [ ] All TypeScript errors resolved
+- [ ] No console.log statements
+- [ ] Components are properly typed
+- [ ] Tests pass (npm test)
+- [ ] Build succeeds (npm run build)
+- [ ] No unused imports or variables
+- [ ] API calls handle errors
+- [ ] Loading states implemented
+
+### Backend
+- [ ] All tests pass (rspec)
+- [ ] Manual testing completed (rails console or browser)
+- [ ] No debugging statements left in code (binding.pry, debugger)
+- [ ] No N+1 queries
+- [ ] Migrations are reversible
+- [ ] API returns consistent JSON format
+- [ ] Error handling implemented for edge cases
+- [ ] CORS configured correctly
+- [ ] No sensitive data in responses
+- [ ] Database constraints match validations
+- [ ] README updated with setup steps
+- [ ] Commit messages are clear and follow conventions
+- [ ] No commented-out code blocks
+- [ ] Environment variables documented if added
+- [ ] Code follows Rails conventions and project standards
+
+### Integration
+- [ ] Frontend can connect to backend
+- [ ] Auth flow works end-to-end
+- [ ] Error messages display properly
+- [ ] API types match responses
+- [ ] CORS working correctly
+
+---
+
+## Technology-Specific Notes
+
+### React + Rails Integration
+- Rails serves API at /api
+- React dev server proxies API requests
+- Production: serve React build from Rails public/
+
+### Common Gotchas
+- CORS issues → check initializers/cors.rb
+- Type mismatches → sync frontend types with serializers
+- Auth tokens → use interceptors, not manual headers
+- N+1 queries → use includes in Rails controllers
+- console.log in production → remove all debugging statements
+
+---
+
+This configuration ensures consistent, production-ready code across the full stack! 🚀

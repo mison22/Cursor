@@ -37,16 +37,27 @@ This repository contains comprehensive guides and configuration files for effect
 ### ⚙️ Configuration
 
 - **[.cursorrules](./.cursorrules)** - Rails development guidelines for AI assistance
+  - Backend-focused configuration for Rails API development
   - Architecture and design patterns
   - Code style and quality standards
   - Error handling strategies
   - Testing approaches
   - Performance and security considerations
 
+- **[cursorrules_fullstack_complete](./cursorrules_fullstack_complete)** - Full-stack development guidelines (React/TypeScript + Rails)
+  - Comprehensive frontend and backend guidance
+  - React/TypeScript best practices and patterns
+  - Rails API development conventions
+  - Frontend-backend integration patterns
+  - Type safety and component architecture
+  - Perfect for monorepo or full-stack projects
+
 ## 🚀 Quick Start
 
 1. **Install Cursor**: Download from [cursor.sh](https://cursor.sh)
-2. **Copy .cursorrules**: Use the provided `.cursorrules` file in your Rails projects
+2. **Choose your configuration**:
+   - For Rails-only projects: Copy `.cursorrules` to your project root
+   - For full-stack projects: Copy `cursorrules_fullstack_complete` as `.cursorrules` to your project root
 3. **Read the guides**: Start with `CURSOR_GUIDE.md` for general usage, then `ASSESSMENT_GUIDE.md` for assessment-specific strategies
 
 ## 🎯 Key Features
@@ -108,13 +119,21 @@ cp ~/.cursorrules .cursorrules
 
 ## 🔧 Configuration
 
-The `.cursorrules` file provides guidelines for:
+### Rails-only Configuration (`.cursorrules`)
+Guidelines for Rails API development:
 - Service object patterns
 - Controller design principles
 - Error handling strategies
 - Testing approaches
 - Performance considerations
 - Security best practices
+
+### Full-Stack Configuration (`cursorrules_fullstack_complete`)
+Comprehensive guidelines for React/TypeScript + Rails projects:
+- **Frontend**: React hooks, TypeScript patterns, component architecture
+- **Backend**: Rails API conventions, service objects, serializers
+- **Integration**: API types, error handling, authentication patterns
+- **Project Structure**: Monorepo organization, shared types, frontend-backend communication
 
 ## 📚 Additional Resources
 
