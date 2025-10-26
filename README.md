@@ -20,6 +20,20 @@ This repository contains comprehensive guides and configuration files for effect
   - Emergency scenarios and troubleshooting
   - Post-submission reflection
 
+### 💼 Practice Resources
+
+- **[PRD_Clean.md](./PRD_Clean.md)** - Clean product requirements document template
+  - Example PRD for practice assessments
+  - Includes setup instructions and requirements
+  - Perfect for practicing with the Assessment Guide
+  - Can be used as a template for creating your own practice projects
+
+- **[setup_omada_practice.sh](./setup_omada_practice.sh)** - Automated Rails project setup script
+  - Creates a complete Rails API project for practice
+  - Includes Member model, validations, seeds, and API endpoints
+  - Sets up RSpec and FactoryBot for testing
+  - Ready to use with PRD_Clean.md for practice assessments
+
 ### ⚙️ Configuration
 
 - **[.cursorrules](./.cursorrules)** - Rails development guidelines for AI assistance
@@ -75,6 +89,21 @@ This repository contains comprehensive guides and configuration files for effect
 
 # Phase 3: Testing
 "Create RSpec tests for the UserController covering happy paths and edge cases"
+```
+
+### Practice Assessment Workflow
+```bash
+# 1. Run the setup script
+bash setup_omada_practice.sh
+
+# 2. Navigate to the project
+cd omada_practice
+
+# 3. Copy your .cursorrules file
+cp ~/.cursorrules .cursorrules
+
+# 4. Start following the Assessment Guide with the PRD_Clean.md as your requirements
+# Follow the step-by-step process in ASSESSMENT_GUIDE.md
 ```
 
 ## 🔧 Configuration
