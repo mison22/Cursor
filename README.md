@@ -28,6 +28,21 @@ This repository contains comprehensive guides and configuration files for effect
   - Testing approaches for React components and Rails APIs
   - Deployment considerations and best practices
 
+### 🎯 Advanced Strategies
+
+- **[RAILS_TWO_TOOL_STRATEGY_GUIDE.md](./RAILS_TWO_TOOL_STRATEGY_GUIDE.md)** - Two-tool strategy for Rails API assessments (Claude + Cursor)
+  - Use Claude for strategic planning and PRD analysis
+  - Use Cursor for code implementation and execution
+  - Synthesize insights while maintaining independent thinking appearance
+  - Leverage both tools' strengths for optimal results
+  - Perfect for demonstrating mature engineering judgment
+
+- **[FULL_STACK_TWO_TOOL_STRATEGY_GUIDE.md](./FULL_STACK_TWO_TOOL_STRATEGY_GUIDE.md)** - Two-tool strategy for full-stack assessments (Claude + Cursor)
+  - Strategic planning with Claude for React/TypeScript + Rails architecture
+  - Implementation with Cursor leveraging codebase context
+  - Coordinated approach for managing frontend and backend complexities
+  - Advanced workflow for maximizing assessment performance
+
 ### 💼 Practice Resources
 
 - **[PRD_Clean.md](./PRD_Clean.md)** - Clean product requirements document template
@@ -68,8 +83,8 @@ This repository contains comprehensive guides and configuration files for effect
    - For full-stack projects: Copy `cursorrules_fullstack_complete` as `.cursorrules` to your project root
 3. **Read the guides**: 
    - Start with `CURSOR_GUIDE.md` for general usage
-   - For Rails-only assessments: Use `ASSESSMENT_GUIDE.md`
-   - For full-stack assessments (React/TypeScript + Rails): Use `FULLSTACK_ASSESSMENT_GUIDE.md`
+   - For Rails-only assessments: Use `ASSESSMENT_GUIDE.md` or `RAILS_TWO_TOOL_STRATEGY_GUIDE.md` (advanced)
+   - For full-stack assessments: Use `FULLSTACK_ASSESSMENT_GUIDE.md` or `FULL_STACK_TWO_TOOL_STRATEGY_GUIDE.md` (advanced)
 
 ## 🎯 Key Features
 
@@ -93,6 +108,13 @@ This repository contains comprehensive guides and configuration files for effect
 - Managing two codebases with Cursor
 - Testing both frontend and backend
 - Deployment preparation and considerations
+
+### Two-Tool Strategy (Advanced)
+- Leverage Claude for strategic planning and analysis
+- Use Cursor for implementation with codebase context
+- Optimize workflow by using each tool's strengths
+- Maintain appearance of independent strategic thinking
+- Demonstrate mature engineering judgment in assessment logs
 
 ## 📋 Usage Examples
 
@@ -135,6 +157,20 @@ This repository contains comprehensive guides and configuration files for effect
 
 # Phase 4: Integration & Testing
 "Test the full flow from React component to Rails API"
+```
+
+**Two-Tool Strategy (Advanced):**
+```bash
+# Step 1: Claude (Strategic Planning)
+"Analyze this PRD and provide architectural recommendations: [paste PRD]"
+
+# Step 2: Synthesize Claude's insights into your plan
+
+# Step 3: Cursor (Implementation)
+"Implement this architecture: [your synthesized plan]"
+"Generate models, controllers, and tests based on this design"
+
+# Result: Cursor logs show YOUR strategic thinking, not AI's
 ```
 
 ### Practice Assessment Workflow
